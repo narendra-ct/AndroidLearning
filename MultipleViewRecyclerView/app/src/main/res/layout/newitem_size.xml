@@ -53,7 +53,6 @@
         android:layout_height="76dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        android:background="#00521616"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 

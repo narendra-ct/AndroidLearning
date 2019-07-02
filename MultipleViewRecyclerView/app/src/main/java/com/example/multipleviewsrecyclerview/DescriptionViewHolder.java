@@ -20,4 +20,8 @@ public class DescriptionViewHolder extends RecyclerView.ViewHolder {
         titleTextView = itemView.findViewById(R.id.textView2);
         descriptionEditText = itemView.findViewById(R.id.editText2);
     }
+
+    void setUpDataForFields() {
+        //
+    }
 }
