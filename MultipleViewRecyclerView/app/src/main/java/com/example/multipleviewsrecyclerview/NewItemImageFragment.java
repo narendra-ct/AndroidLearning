@@ -20,13 +20,13 @@ public class NewItemImageFragment extends Fragment {
     private ImageView mImageView;
     private TextView mSubTitle;
 
-    private Button centerCamButton;
     private Button deleteButton;
-    private Button cornerCamButton;
 
     //vars
     // private
     String mImage;
+
+    ButtonActions mActions;
 
     public static NewItemImageFragment getInstance(String image) {
         NewItemImageFragment fragment = new NewItemImageFragment();
@@ -38,6 +38,10 @@ public class NewItemImageFragment extends Fragment {
             fragment.setArguments(bundle);
         }
         return fragment;
+    }
+
+    public void setButtonActions(ButtonActions action) {
+        mActions = action;
     }
 
     @Override
@@ -63,17 +67,29 @@ public class NewItemImageFragment extends Fragment {
 
         mImageView = view.findViewById(R.id.imageView5);
         // mSubTitle = view.findViewById(R.id.title);
-        centerCamButton = view.findViewById(R.id.button4);
         deleteButton = view.findViewById(R.id.button5);
-        cornerCamButton = view.findViewById(R.id.button6);
 
-        // setdata
-        updateData();
+
+        //Add actions button
+
+        //centerCamButton.setOnClickListener((View.OnClickListener) this);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // center camera button action
+                mActions.didTapDeleteButton(deleteButton);
+            }
+        });
 
     }
 
     private void updateData() {
 
         // imagesmImageView.setBackground();
+    }
+
+    public interface ButtonActions {
+        public void didTapDeleteButton(Button button);
     }
 }

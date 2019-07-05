@@ -4,10 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.fxn.pix.Options;
+import com.fxn.pix.Pix;
+import com.fxn.utility.ImageQuality;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ONNClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -18,14 +27,48 @@ public class MainActivity extends AppCompatActivity {
 
         initRecyclerView();
 
+        //set interface or allocate interface
+
     }
 
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: ");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(new RecyclerViewAdapter(this));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, this);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public void onAddImageClick() {
+        Toast.makeText(this,"onAddImageClick",Toast.LENGTH_LONG).show();
+//        Options options = Options.init()
+//                .setRequestCode(100)                                                 //Request code for activity results
+//                .setCount(6)                                                         //Number of images to restict selection count
+//                .setFrontfacing(false)                                                //Front Facing camera on start
+//                .setImageQuality(ImageQuality.HIGH)                                  //Image Quality
+//                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)           //Orientaion
+//                .setPath("/pix/images");                                             //Custom Path For Image Storage
+//
+//        Pix.start(MainActivity.this, options);
+
+
+        // Pix.start(this, Options.init().setRequestCode(100));
 
     }
+
+    @Override
+    public void onDeleteImageClick() {
+        Toast.makeText(this,"onDeleteImageClick",Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == 100) {
+            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            Log.d(TAG, "returnValue " + returnValue);
+        }
+    }
+
 }

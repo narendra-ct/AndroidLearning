@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements NewItemImageViewHolder.AddimagesAction {
 
     private static final String TAG = "RecyclerViewAdapter";
 
@@ -21,13 +21,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static int TYPE_SIZE = 5;
 
     private Context mContext;
+    private ONNClickListener onnClickListener;
 
 
 
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context, ONNClickListener onnClickListener) {
         Log.d(TAG, "RecyclerViewAdapter: context " + context);
 
         mContext = context;
+        this.onnClickListener = onnClickListener;
     }
 
 
@@ -37,7 +39,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View view;
         if (viewType == TYPE_IMAGE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.newitem_image,parent,false);
-            return new NewItemImageViewHolder(view,mContext);
+            NewItemImageViewHolder holder = new NewItemImageViewHolder(view,mContext,this);
+            return holder;
         }else if (viewType == TYPE_NAME) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.newitem_textfield,parent,false);
             return new NewItemTextViewHolder(view);
@@ -128,5 +131,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }else {
             return TYPE_SIZE;
         }
+    }
+
+    @Override
+    public void didTapAddImage() {
+
+        onnClickListener.onAddImageClick();
+    }
+
+    @Override
+    public void didTapDeleteImage() {
+        Log.d(TAG, "didTapDeleteImage: ");
+        onnClickListener.onDeleteImageClick();
+    }
+
+
+    public interface ONNClickListener {
+        void onAddImageClick();
+        void onDeleteImageClick();
     }
 }

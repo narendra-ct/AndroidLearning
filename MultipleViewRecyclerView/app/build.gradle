@@ -16,6 +16,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug{
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -30,5 +38,8 @@ dependencies {
 
     //support design
     implementation 'com.google.android.material:material:1.0.0-rc01'
+
+    //Image Picker
+    implementation  'com.fxn769:pix:1.4.4'
 
 }
