@@ -57,8 +57,6 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
                 if (imageActionListener != null) {
                     imageActionListener.didTapAddImage();
                 }
-
-                loadImageController();
             }
         });
 
@@ -70,7 +68,6 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
                 if (imageActionListener != null) {
                     imageActionListener.didTapAddImage();
                 }
-                loadImageController();
             }
         });
     }
@@ -123,41 +120,6 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
         // if required can be used
         imageActionListener.didTapDeleteImage(index);
     }
-
-    // Load Images
-
-    private void loadImageController() {
-
-        Options options = Options.init()
-                .setRequestCode(100)                                                 //Request code for activity results
-                .setCount(6)                                                         //Number of images to restict selection count
-                .setFrontfacing(false)                                                //Front Facing camera on start
-                .setImageQuality(ImageQuality.HIGH)                                  //Image Quality
-                .setPreSelectedUrls(new ArrayList<>())                                     //Pre selected Image Urls
-                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)           //Orientaion
-                .setPath("/pix/images");                                             //Custom Path For Image Storage
-        Pix.start((MainActivity) mContext, options);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public interface AddimagesAction {
         public void didTapAddImage();
