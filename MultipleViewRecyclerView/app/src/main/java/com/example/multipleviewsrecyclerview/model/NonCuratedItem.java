@@ -12,7 +12,7 @@ public class NonCuratedItem {
     Integer itemSize;
     ArrayList<String> images;
 
-    
+
     public String getItemName() {
         return itemName;
     }

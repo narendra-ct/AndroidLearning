@@ -1,5 +1,6 @@
 package com.example.multipleviewsrecyclerview;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,33 @@ class NewItemSizeViewHolder extends RecyclerView.ViewHolder {
         titleTextView.setText("Title");
         //valueEditText.setText("HELLO ajksh k");
     }
+
+    void setUpButtonSate(Integer itemSize ) {
+        switch (itemSize) {
+            case 1:
+                button1.setBackgroundColor(Color.RED);
+                button2.setBackgroundResource(R.color.colorAccent);
+                button3.setBackgroundResource(R.color.colorAccent);
+                break;
+            case 2:
+                button2.setBackgroundColor(Color.RED);
+                button1.setBackgroundResource(R.color.colorAccent);
+                button3.setBackgroundResource(R.color.colorAccent);
+                break;
+            case 3:
+                button3.setBackgroundColor(Color.RED);
+                button2.setBackgroundResource(R.color.colorAccent);
+                button1.setBackgroundResource(R.color.colorAccent);
+                break;
+
+                default:
+                    button1.setBackgroundResource(R.color.colorAccent);
+                    button2.setBackgroundResource(R.color.colorAccent);
+                    button3.setBackgroundResource(R.color.colorAccent);
+                    break;
+        }
+    }
+
 }
 class NewItemPriceViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "NewItemPriceViewHolder";

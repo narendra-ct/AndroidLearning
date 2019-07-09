@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.multipleviewsrecyclerview.model.NonCuratedItem;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ONNClickListener {
 
     private static final String TAG = "MainActivity";
+
+    private NonCuratedItem newItem = new NonCuratedItem();
+    private RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         Log.d(TAG, "initRecyclerView: ");
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, this);
+        adapter = new RecyclerViewAdapter(this, newItem, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -59,8 +63,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     @Override
-    public void onDeleteImageClick() {
-        Toast.makeText(this,"onDeleteImageClick",Toast.LENGTH_LONG).show();
+    public void onDeleteImageClick(Integer index) {
+        Toast.makeText(this,"onDeleteImageClick" + index,Toast.LENGTH_LONG).show();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -68,7 +72,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         if (resultCode == Activity.RESULT_OK && requestCode == 100) {
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             Log.d(TAG, "returnValue " + returnValue);
+
+            // update in UI
+            newItem = adapter.getUpdatedItem();
+            newItem.setImages(returnValue);
+            adapter.setUpdatedNewItem(newItem);
+            adapter.notifyDataSetChanged();
+
         }
     }
-
 }

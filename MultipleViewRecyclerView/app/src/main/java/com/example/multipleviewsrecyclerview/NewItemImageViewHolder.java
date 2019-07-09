@@ -33,7 +33,9 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
 
     AddimagesAction imageActionListener;
 
-    public NewItemImageViewHolder(@NonNull View itemView, Context context, AddimagesAction listener) {
+    ArrayList<String> mImages = new ArrayList<String>();
+
+    public NewItemImageViewHolder(@NonNull View itemView, Context context, ArrayList<String> images ,AddimagesAction listener) {
         super(itemView);
         this.mContext = context;
         viewPager = itemView.findViewById(R.id.viewpager);
@@ -46,9 +48,6 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
 
         TabLayout tabLayout = (TabLayout) itemView.findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager, true);
-
-
-        setupViewPager();
 
         centerCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,37 +70,58 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
                 if (imageActionListener != null) {
                     imageActionListener.didTapAddImage();
                 }
+                loadImageController();
             }
         });
     }
 
+    void setUpdatedImages(ArrayList<String> images) {
+        if (images != null) {
+            mImages = images;
+        }else {
+            mImages = new ArrayList<>();
+        }
+        setupViewPager();
+    }
 
-    void setupViewPager(){
+
+    private void setupViewPager(){
+
+        viewPager.setSaveFromParentEnabled(false);
+
+        //updateUI components based on images size
+        if (mImages.size() == 0) {
+            centerCameraButton.setVisibility(View.VISIBLE);
+            infoTextView.setVisibility(View.VISIBLE);
+            cornerCameraButton.setVisibility(View.INVISIBLE);
+        }else if (mImages.size() == 6) {
+            centerCameraButton.setVisibility(View.INVISIBLE);
+            infoTextView.setVisibility(View.INVISIBLE);
+            cornerCameraButton.setVisibility(View.INVISIBLE);
+        }else {
+            centerCameraButton.setVisibility(View.INVISIBLE);
+            cornerCameraButton.setVisibility(View.VISIBLE);
+            infoTextView.setVisibility(View.INVISIBLE);
+        }
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        ArrayList<String> images = new ArrayList<>();
-        images.add("");
-        images.add("");
-        images.add("");
-        images.add("");
-        images.add("");
+        for (String image: mImages) {
 
-        for (String image: images) {
-            NewItemImageFragment fragment = NewItemImageFragment.getInstance(image);
+            Integer index = mImages.indexOf(image);
+            NewItemImageFragment fragment = NewItemImageFragment.getInstance(image,index);
             fragment.setButtonActions(this);
             fragments.add(fragment);
         }
-        NewItemImageAdapter adapter = new NewItemImageAdapter(((AppCompatActivity) mContext).getSupportFragmentManager(),images,fragments);
+        NewItemImageAdapter adapter = new NewItemImageAdapter(((AppCompatActivity) mContext).getSupportFragmentManager(),mImages,fragments);
         viewPager.setAdapter(adapter);
     }
 
     @Override
-    public void didTapDeleteButton(Button button) {
-        Log.d(TAG, "didTapButton: ");
-
+    public void didTapDeleteButton(Integer index) {
+        Log.d(TAG, "didTapButton: "+ index);
         // if required can be used
-        imageActionListener.didTapDeleteImage();
+        imageActionListener.didTapDeleteImage(index);
     }
 
     // Load Images
@@ -110,7 +130,7 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
 
         Options options = Options.init()
                 .setRequestCode(100)                                                 //Request code for activity results
-                .setCount(3)                                                         //Number of images to restict selection count
+                .setCount(6)                                                         //Number of images to restict selection count
                 .setFrontfacing(false)                                                //Front Facing camera on start
                 .setImageQuality(ImageQuality.HIGH)                                  //Image Quality
                 .setPreSelectedUrls(new ArrayList<>())                                     //Pre selected Image Urls
@@ -141,7 +161,7 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
 
     public interface AddimagesAction {
         public void didTapAddImage();
-        public void didTapDeleteImage();
+        public void didTapDeleteImage(Integer index);
     }
 
 }

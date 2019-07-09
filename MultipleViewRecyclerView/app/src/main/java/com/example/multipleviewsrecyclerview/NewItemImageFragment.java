@@ -1,5 +1,7 @@
 package com.example.multipleviewsrecyclerview;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.File;
+
 public class NewItemImageFragment extends Fragment {
 
     private static final String TAG = "NewItemImageFragment";
@@ -22,20 +26,27 @@ public class NewItemImageFragment extends Fragment {
 
     private Button deleteButton;
 
+    private Integer mIndex;
+
     //vars
     // private
     String mImage;
-
     ButtonActions mActions;
 
-    public static NewItemImageFragment getInstance(String image) {
+
+    public static NewItemImageFragment getInstance(String image, Integer index) {
         NewItemImageFragment fragment = new NewItemImageFragment();
 
         if (image != null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("image",image);
-            //bundle.putParcelable("hat", hat);
-            fragment.setArguments(bundle);
+            fragment.mIndex = index;
+            fragment.mImage = image;
+
+
+//            Bundle bundle = new Bundle();
+//            bundle.putString("image",image);
+//            //bundle.putParcelable("hat", hat);
+//            fragment.setArguments(bundle);
+
         }
         return fragment;
     }
@@ -69,16 +80,21 @@ public class NewItemImageFragment extends Fragment {
         // mSubTitle = view.findViewById(R.id.title);
         deleteButton = view.findViewById(R.id.button5);
 
+        //show image
+        File imgFile = new  File(mImage);
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            mImageView.setImageBitmap(myBitmap);
+        }
 
         //Add actions button
-
         //centerCamButton.setOnClickListener((View.OnClickListener) this);
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // center camera button action
-                mActions.didTapDeleteButton(deleteButton);
+                mActions.didTapDeleteButton(mIndex);
             }
         });
 
@@ -90,6 +106,6 @@ public class NewItemImageFragment extends Fragment {
     }
 
     public interface ButtonActions {
-        public void didTapDeleteButton(Button button);
+        public void didTapDeleteButton(Integer index);
     }
 }
