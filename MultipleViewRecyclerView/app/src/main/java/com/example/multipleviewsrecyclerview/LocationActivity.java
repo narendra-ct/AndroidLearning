@@ -92,21 +92,24 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                Toast.makeText(getApplicationContext(),"seekbar progress: "+progress, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"seekbar progress: "+progress, Toast.LENGTH_SHORT).show();
 
-                if (selectedLatLng != null) {
-                    drawCircle(selectedLatLng,progress);
-                }
+//                if (selectedLatLng != null) {
+//                    drawCircle(selectedLatLng,progress);
+//                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getApplicationContext(),"seekbar touch started! : "+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"seekbar touch started! : "+seekBar.getProgress(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getApplicationContext(),"seekbar touch stopped!:: " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"seekbar touch stopped!:: " + seekBar.getProgress(), Toast.LENGTH_SHORT).show();
+                if (selectedLatLng != null) {
+                    drawCircle(selectedLatLng,seekBar.getProgress());
+                }
             }
         });
     }
@@ -136,6 +139,20 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         }else {
             getLocationPermissions();
         }
+
+
+
+        //location buttonclick listener
+        //add location button click listener
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener(){
+            @Override
+            public boolean onMyLocationButtonClick()
+            {
+                //TODO: Any custom actions
+                getDeviceLocation();
+                return false;
+            }
+        });
     }
 
     private void getLocationPermissions() {
@@ -278,31 +295,34 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         circleOptions.strokeWidth(1);
         // Adding the circle to the GoogleMap
         mMap.addCircle(circleOptions);
+
+
+        updateMapZoomLevel(point,mRadius);
     }
 
 
-    private void updateMapZoomLevel(float radius){
+    private void updateMapZoomLevel(LatLng location, float radius){
 
         if (radius > 5000 && radius < 10000) {
             if (mMap.getCameraPosition().zoom != 11) {
-
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 11.0f));
             }
 
         }else if (radius > 10000 && radius < 25000) {
             if (mMap.getCameraPosition().zoom != 9.3) {
-
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 9.3f));
             }
         }else if (radius > 40000 && radius < 65000) {
             if (mMap.getCameraPosition().zoom != 8.5) {
-
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 8.5f));
             }
         }else if (radius > 65000 && radius < 90000) {
             if (mMap.getCameraPosition().zoom != 8) {
-
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 8f));
             }
         }else if (radius > 65000) {
             if (mMap.getCameraPosition().zoom != 7) {
-
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 7f));
             }
         }
 
