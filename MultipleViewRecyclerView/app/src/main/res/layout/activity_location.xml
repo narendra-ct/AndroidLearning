@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/locationTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -42,13 +42,13 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/locationTextView"
         app:srcCompat="@color/colorAccent" />
 
     <TextView
         android:id="@+id/MaxDistance"
         android:layout_width="0dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-condensed"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/milesTextView"
         android:layout_width="0dp"
         android:layout_height="26dp"
         android:layout_marginStart="16dp"
@@ -77,13 +77,25 @@
         android:layout_width="376dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:max="100"
         android:progress="50"
         android:progressTint="#595959"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/milesTextView" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
