@@ -1,10 +1,13 @@
 package com.example.kortlinsampleform
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
@@ -26,8 +29,30 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         //Initialize UI
         initializeUI()
-
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        var id = item.itemId
+        if (id == R.id.action_name) {
+            navigateToNext()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun navigateToNext() {
+        val intent = Intent(this, PickupLocationActivity::class.java)
+        startActivity(intent)
+    }
+
+
 
     private fun initializeUI(){
         print("initializeUI")
@@ -71,22 +96,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         testButton2.setOnClickListener(this)
         testButton3.setOnClickListener(this)
 
-
-
-
-//        test1TextView.addTextChangedListener(object : TextWatcher {
-//            override fun afterTextChanged(s: Editable?) {
-//
-//                print("TextChanged:: ${s.toString()}")
-//                Log.d("MainActivity", "TextChanged:: ${s.toString()}")
-//                print(s.toString())
-//            }
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//
-//                Log.d("MainActivity", "TextChanged:: ${s.toString()}")
-//            }
-//        })
     }
     override fun onClick(v: View?) {
 
@@ -109,12 +118,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
 
     }
-
-
-
-
-
-
 
     fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         this.addTextChangedListener(object : TextWatcher {

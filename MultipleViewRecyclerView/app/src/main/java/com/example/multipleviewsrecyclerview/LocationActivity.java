@@ -325,6 +325,5 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 7f));
             }
         }
-
     }
 }
