@@ -14,14 +14,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-
-
-
+import com.example.kortlinsampleform.Modal.NonCuratedItem
+import java.math.BigDecimal
 
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
     val TAG = "MainActivity"
+
+    lateinit var nonCuratedItem: NonCuratedItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         //Initialize UI
         initializeUI()
+
+        //Initialize noncurated item class
+        nonCuratedItem = NonCuratedItem()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,6 +53,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     fun navigateToNext() {
         val intent = Intent(this, PickupLocationActivity::class.java)
+        intent.putExtra("NewItem",nonCuratedItem)
         startActivity(intent)
     }
 
@@ -61,28 +66,34 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val test1View = findViewById<View>(R.id.item_name)
         val test1TextView = test1View.findViewById<EditText>(R.id.editText)
 
-        test1TextView.afterTextChanged {
+        test1TextView.afterTextChanged { string ->
+            nonCuratedItem.itemName = test1TextView.text.toString()
             Log.d("MainActivity", "TextChanged:: ${test1TextView.text}")
         }
 
         val test2View = findViewById<View>(R.id.item_link)
         val test2TextView = test2View.findViewById<EditText>(R.id.editText)
 
-        test2TextView.afterTextChanged {
+        test2TextView.afterTextChanged { string ->
+            nonCuratedItem.link = test2TextView.text.toString()
             Log.d("MainActivity", "test2TextView:: ${test2TextView.text}")
         }
 
         val test3View = findViewById<View>(R.id.item_price)
         val test3TextView = test3View.findViewById<EditText>(R.id.editText4)
 
-        test3TextView.afterTextChanged {
+        test3TextView.afterTextChanged { string ->
+            if (!test3TextView.text.toString().isBlank()) {
+                nonCuratedItem.price = BigDecimal(test3TextView.text.toString())
+            }
             Log.d("MainActivity", "test3TextView:: ${test3TextView.text}")
         }
 
         val test4View = findViewById<View>(R.id.item_description)
         val test4TextView = test4View.findViewById<EditText>(R.id.editText2)
 
-        test4TextView.afterTextChanged {
+        test4TextView.afterTextChanged { string ->
+            nonCuratedItem.itemDescription = test4TextView.text.toString()
             Log.d("MainActivity", "test4TextView:: ${test4TextView.text}")
         }
 
