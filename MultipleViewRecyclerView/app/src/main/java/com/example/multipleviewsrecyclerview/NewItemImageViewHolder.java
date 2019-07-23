@@ -85,7 +85,6 @@ public class NewItemImageViewHolder extends RecyclerView.ViewHolder implements N
     private void setupViewPager(){
 
         viewPager.setSaveFromParentEnabled(false);
-
         //updateUI components based on images size
         if (mImages.size() == 0) {
             centerCameraButton.setVisibility(View.VISIBLE);
