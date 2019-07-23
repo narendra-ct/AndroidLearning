@@ -2,6 +2,7 @@ package com.example.kortlinsampleform
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -9,6 +10,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.TextView
@@ -16,6 +19,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.kortlinsampleform.Modal.NonCuratedItem
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -57,6 +61,9 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
     private var pickupLocationTextView: TextView? = null
     private var milesTextView: TextView? = null
 
+    //data variabel
+    lateinit var nonCuratedItem: NonCuratedItem
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pickup_location)
@@ -65,6 +72,28 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         init()
         getLocationPermissions()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (item.itemId == R.id.action_name) {
+            navigateToNext()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    internal fun navigateToNext() {
+        val intent = Intent(this, PickupLocationActivity::class.java)
+        intent.putExtra("NewItem",nonCuratedItem)
+        startActivity(intent)
+    }
+
 
     private fun loadWidgets() {
         // load widgets

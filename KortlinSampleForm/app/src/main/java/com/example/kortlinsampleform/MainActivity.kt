@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.
         //Initialize UI
         initializeUI()
         inititalizeViewpager()
+        setupViewPager()
 
         //Initialize noncurated item class
         nonCuratedItem = NonCuratedItem()
