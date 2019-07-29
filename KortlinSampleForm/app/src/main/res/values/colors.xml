@@ -7,4 +7,8 @@
     <color name="Transparent">#00000000</color>
     <color name="colorPrimaryPix">#075e54</color>
     <color name="colorPrimaryLightPix">#80075e54</color>
+
+    <color name="colorShoppper">#EE7474</color>
+    <color name="colorTraveller">#7870C1</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

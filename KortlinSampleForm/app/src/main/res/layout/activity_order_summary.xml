@@ -7,4 +7,114 @@
         android:layout_height="match_parent"
         tools:context=".OrderSummaryActivity">
 
+    <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="50dp">
+        <LinearLayout android:id="@+id/formLinearLayout"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:focusable="true"
+                      android:focusableInTouchMode="true"
+                      android:orientation="vertical">
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/heade_name"
+                      android:paddingTop="5dp"
+                      android:layout_marginBottom="8dp"
+                      android:text="Item Details" android:layout_marginLeft="16dp" android:layout_marginTop="8dp"
+                      android:layout_marginRight="16dp"
+                      android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <include android:id="@+id/item_details"
+                     layout="@layout/noncurated_item_summary"/>
+
+            <include android:id="@+id/item_price"
+                     layout="@layout/newitem_value"/>
+
+            <include android:id="@+id/item_description"
+                     layout="@layout/newitem_description"/>
+
+            <include android:id="@+id/item_pickup_location"
+                     layout="@layout/item_map_pickup_location"/>
+
+            <include android:id="@+id/item_quantity"
+                     layout="@layout/item_quantity"/>
+
+            <include android:id="@+id/item_deliver_by"
+                     layout="@layout/item_deliver_by"/>
+
+            <include android:id="@+id/item_message_first"
+                     layout="@layout/item_deliver_by"/>
+
+            <include android:id="@+id/item_special_instructions"
+                     layout="@layout/newitem_description"/>
+
+            <include android:id="@+id/item_additional_info"
+                     layout="@layout/item_additional_info"/>
+
+            <include android:id="@+id/item_purchase_location"
+                     android:visibility="gone"
+                     layout="@layout/item_two_line_filed_arrow"/>
+
+            <include android:id="@+id/item_purchase_store"
+                     android:visibility="gone"
+                     layout="@layout/newitem_textfield"/>
+
+            <!--<include android:id="@+id/item_purchase_store"-->
+                     <!--android:visibility="invisible"-->
+                     <!--layout="@layout/newitem_textfield"/>-->
+
+            <include android:id="@+id/item_preferred_method"
+                     android:visibility="gone"
+                     layout="@layout/item_preferred_pickup_method"/>
+            <include android:id="@+id/item_specific_questions"
+                     android:visibility="gone"
+                     layout="@layout/item_single_textview_add" />
+
+            <include android:id="@+id/item_price_details"
+                     layout="@layout/item_price_breakdown"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:background="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+                android:text="Post Order"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:id="@+id/postOrder"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+                android:text="Total $151.06"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:id="@+id/totalPriceTextView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_marginStart="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/postOrder"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

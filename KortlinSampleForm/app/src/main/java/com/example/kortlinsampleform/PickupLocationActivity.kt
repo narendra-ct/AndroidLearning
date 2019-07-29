@@ -68,6 +68,11 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pickup_location)
 
+        var item = intent.extras!!.get("NewItem")
+        if (item != null) {
+            nonCuratedItem = item as NonCuratedItem
+        }
+
         loadWidgets()
         init()
         getLocationPermissions()
@@ -89,7 +94,7 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
     }
 
     internal fun navigateToNext() {
-        val intent = Intent(this, PickupLocationActivity::class.java)
+        val intent = Intent(this, OrderSummaryActivity::class.java)
         intent.putExtra("NewItem",nonCuratedItem)
         startActivity(intent)
     }
