@@ -72,6 +72,7 @@
             <include android:id="@+id/item_preferred_method"
                      android:visibility="gone"
                      layout="@layout/item_preferred_pickup_method"/>
+
             <include android:id="@+id/item_specific_questions"
                      android:visibility="gone"
                      layout="@layout/item_single_textview_add" />
