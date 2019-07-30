@@ -1,6 +1,7 @@
 package com.example.kortlinsampleform
 
-import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,27 +10,15 @@ import androidx.core.view.isVisible
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import android.R.attr.button
-import android.R.color
-import android.R.attr.strokeWidth
-import android.R.attr.radius
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.widget.Button
 import androidx.core.content.ContextCompat
-import io.fotoapparat.selector.back
-import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
-import com.google.android.libraries.places.internal.dp
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-
-
-
-
-
+import android.widget.Toast
+import com.example.kortlinsampleform.LocationSearchActivity.LocationSearchActivity
 
 
 class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -37,11 +26,13 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
     //widgets
     private var mGmapView: MapView? = null
     private var parentLinearLayout: LinearLayout? = null
-
+    private var purchaseLocView: View? = null
 
     private var mMap: GoogleMap? = null
 
-
+    companion object {
+        const val START_ACTIVITY_LOCATION_REQUEST_CODE = 1
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +66,7 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val additionalInfoView     = findViewById<View>(R.id.item_additional_info)
 
-        var purchaseLocView = findViewById<View>(R.id.item_purchase_location)
+        purchaseLocView = findViewById<View>(R.id.item_purchase_location)
         var purchaseStoreView = findViewById<View>(R.id.item_purchase_store)
         var pickupMethodView = findViewById<View>(R.id.item_preferred_method)
         var questionsView = findViewById<View>(R.id.item_specific_questions)
@@ -84,7 +75,7 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
         additionalInfoView.setOnClickListener {
             isClicked = !isClicked
             if (isClicked) {
-                purchaseLocView.isVisible = true
+                purchaseLocView!!.isVisible = true
                 purchaseStoreView.isVisible = true
                 pickupMethodView.isVisible = true
                 questionsView.isVisible = true
@@ -94,7 +85,7 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
                 purchaseStoreView.findViewById<TextView>(R.id.editText).text = "Anywhere"
 
             }else{
-                purchaseLocView.isVisible = false
+                purchaseLocView!!.isVisible = false
                 purchaseStoreView.isVisible = false
                 pickupMethodView.isVisible = false
                 questionsView.isVisible = false
@@ -103,6 +94,7 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //for questions
         questionsAction(questionsView)
+        didTapPurchaseLocationAction(purchaseLocView!!)
     }
 
     private fun questionsAction(questionsView: View) {
@@ -113,11 +105,10 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
             rowView.findViewById<TextView>(R.id.textview_title).text = "Question Tilte" + parentLinearLayout!!.childCount
             rowView.findViewById<TextView>(R.id.textView_title_value).text = "Answer - Question" + parentLinearLayout!!.childCount
 
-
             val factor = this.getResources().getDisplayMetrics().density.toInt()
             rowView.setLayoutParams(ViewGroup.LayoutParams(parentLinearLayout!!.width, 75 * factor))
 
-            parentLinearLayout!!.addView(rowView,parentLinearLayout!!.childCount - 1)
+            parentLinearLayout!!.addView(rowView,parentLinearLayout!!.indexOfChild(questionsView))
         }
     }
 
@@ -153,6 +144,33 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
         mGmapView!!.onResume()
     }
 
+    private fun didTapPurchaseLocationAction(pickupLocView: View) {
+        pickupLocView.setOnClickListener {
+            //questionsView action
+            // Add the new row before the add field button.
+            navigateToLocationSearchActivity()
+        }
+
+    }
+
+    fun navigateToLocationSearchActivity() {
+        val intent = Intent(this, LocationSearchActivity::class.java)
+        startActivityForResult(intent, START_ACTIVITY_LOCATION_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == START_ACTIVITY_LOCATION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                val locationName = data!!.getStringExtra("city") + ", " + data!!.getStringExtra("country")
+                purchaseLocView!!.findViewById<TextView>(R.id.textView_title_value).text = locationName
+                Toast.makeText(this, locationName, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
     fun setCornerRadius(view: View, backgroundColor: Int, radius: Float) {
         val gradientDrawable = GradientDrawable()
         gradientDrawable.setColor(backgroundColor)
@@ -160,5 +178,9 @@ class OrderSummaryActivity : AppCompatActivity(), OnMapReadyCallback {
         view.stateListAnimator = null
         //gradientDrawable.setStroke(strokeWidth, color)
         view.setBackground(gradientDrawable)
+    }
+
+    private fun hideSoftKeyborad() {
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 }

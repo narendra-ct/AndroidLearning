@@ -2,10 +2,12 @@ package com.example.kortlinsampleform
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Location
+import android.location.Address
+import android.location.Geocoder
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.kortlinsampleform.LocationSearchActivity.LocationSearchActivity
 import com.example.kortlinsampleform.Modal.NonCuratedItem
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,12 +32,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import java.io.IOException
+import java.util.*
 
 class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.OnSeekBarChangeListener, GoogleMap.OnMyLocationButtonClickListener {
 
+    companion object {
+        const val START_ACTIVITY_LOCATION_REQUEST_CODE = 0
+    }
 
     val TAG = "PickupLocationActivity"
 
@@ -105,6 +110,11 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         seekBar = findViewById(R.id.seekBar) as SeekBar
         pickupLocationTextView = findViewById(R.id.locationTextView) as TextView
         milesTextView = findViewById(R.id.milesTextView) as TextView
+
+        pickupLocationTextView!!.setOnClickListener {
+            var intent = Intent(this,LocationSearchActivity::class.java)
+            startActivityForResult(intent,START_ACTIVITY_LOCATION_REQUEST_CODE)
+        }
     }
 
     private fun init() {
@@ -225,7 +235,8 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
                 if (location != null) {
                     Log.d(TAG, "onComplete: found location:: $location" )
                     val currentLatLng = LatLng(location.latitude, location.longitude)
-                    moveCamera(currentLatLng,DEFAULT_ZOOM,"My Location")
+                    // moveCamera(currentLatLng,DEFAULT_ZOOM,"My Location")
+                    geoLcoate(currentLatLng)
                 }else{
                     Log.d(TAG, "onComplete: unable get current locaiton")
                     Toast.makeText(this, "Unable to get current location", Toast.LENGTH_LONG)
@@ -242,12 +253,12 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         )
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
 
-        if (title != "My Location") {
-            val options = MarkerOptions()
-            options.position(latLng)
-            options.title(title)
-            mMap?.addMarker(options)
-        }
+//        if (title != "My Location") {
+//            val options = MarkerOptions()
+//            options.position(latLng)
+//            options.title(title)
+//            mMap?.addMarker(options)
+//        }
 
         pickupLocationTextView?.setText(title)
         milesTextView?.setText("20 miles")
@@ -307,11 +318,76 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
             }
         }
     }
+    private fun geoLcoate(latLng: LatLng) {
+
+        Log.d(LocationSearchActivity.TAG, "geoLcoate: Called")
+
+        var addressStr = getAddress(latLng)
+
+        val geocoder = Geocoder(this, Locale.getDefault())
+        var list: List<Address> = ArrayList()
+        try {
+            geocoder.getFromLocation(latLng.latitude,latLng.longitude,5)
+            //list = geocoder.getFromLocationName(searchString, 1)
+        } catch (e: IOException) {
+            Log.d(LocationSearchActivity.TAG, "geoLcoate: IOException: " + e.localizedMessage)
+            Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
+        }
+        if (list.isNotEmpty()) {
+            val address = list.first()
+            var locationName = address.locality
+            if (locationName == null || locationName.isEmpty()) {
+                locationName = address.subLocality
+            }
+            locationName = locationName + "," + address.countryName
+            moveCamera(latLng,DEFAULT_ZOOM,locationName)
+
+        }else{
+            Toast.makeText(this, "Location Not Found", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == START_ACTIVITY_LOCATION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                val locationName = data!!.getStringExtra("city") + ", " + data!!.getStringExtra("country")
+                val latLng = LatLng(data!!.getDoubleExtra("latitude",0.0), data!!.getDoubleExtra("longitude",0.0))
+                moveCamera(latLng,DEFAULT_ZOOM,locationName)
+
+                Toast.makeText(this, locationName, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun getAddress(latLng: LatLng): String {
+        // 1
+        val geocoder = Geocoder(this)
+        val addresses: List<Address>?
+        val address: Address?
+        var addressText = ""
+
+        try {
+            // 2
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            // 3
+            if (null != addresses && !addresses.isEmpty()) {
+                address = addresses[0]
+                for (i in 0 until address.maxAddressLineIndex) {
+                    addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("MapsActivity", e.localizedMessage)
+        }
+
+        return addressText
+    }
+
 
     private fun hideSoftKeyborad() {
         this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
-
-
 
 }
