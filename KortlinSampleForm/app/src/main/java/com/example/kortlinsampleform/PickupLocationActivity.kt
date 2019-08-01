@@ -135,6 +135,9 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         Log.d(TAG,"onStopTrackingTouch:: ${p0!!.progress}")
         if (selectedLatLng != null) {
             drawCircle(selectedLatLng!!, seekBar!!.getProgress())
+            val milesInt = seekBar!!.getProgress().toInt()
+            milesTextView!!.text = "$milesInt miles"
+
         }
     }
 
@@ -253,19 +256,11 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
         )
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
 
-//        if (title != "My Location") {
-//            val options = MarkerOptions()
-//            options.position(latLng)
-//            options.title(title)
-//            mMap?.addMarker(options)
-//        }
-
         pickupLocationTextView?.setText(title)
-        milesTextView?.setText("20 miles")
         selectedLatLng = latLng
+        milesTextView!!.text = "20 miles"
+        seekBar!!.progress = 20
         drawCircle(latLng, 20)
-
-        hideSoftKeyborad()
     }
 
     private fun drawCircle(point: LatLng, radius: Int) {
@@ -322,17 +317,15 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
 
         Log.d(LocationSearchActivity.TAG, "geoLcoate: Called")
 
-        var addressStr = getAddress(latLng)
-
         val geocoder = Geocoder(this, Locale.getDefault())
         var list: List<Address> = ArrayList()
         try {
-            geocoder.getFromLocation(latLng.latitude,latLng.longitude,5)
-            //list = geocoder.getFromLocationName(searchString, 1)
+            list = geocoder.getFromLocation(latLng.latitude,latLng.longitude,5)
         } catch (e: IOException) {
             Log.d(LocationSearchActivity.TAG, "geoLcoate: IOException: " + e.localizedMessage)
             Toast.makeText(this, e.localizedMessage, Toast.LENGTH_LONG).show()
         }
+
         if (list.isNotEmpty()) {
             val address = list.first()
             var locationName = address.locality
@@ -360,34 +353,4 @@ class PickupLocationActivity : AppCompatActivity(),OnMapReadyCallback, SeekBar.O
             }
         }
     }
-
-    private fun getAddress(latLng: LatLng): String {
-        // 1
-        val geocoder = Geocoder(this)
-        val addresses: List<Address>?
-        val address: Address?
-        var addressText = ""
-
-        try {
-            // 2
-            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            // 3
-            if (null != addresses && !addresses.isEmpty()) {
-                address = addresses[0]
-                for (i in 0 until address.maxAddressLineIndex) {
-                    addressText += if (i == 0) address.getAddressLine(i) else "\n" + address.getAddressLine(i)
-                }
-            }
-        } catch (e: IOException) {
-            Log.e("MapsActivity", e.localizedMessage)
-        }
-
-        return addressText
-    }
-
-
-    private fun hideSoftKeyborad() {
-        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-    }
-
 }

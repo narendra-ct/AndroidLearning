@@ -3,6 +3,7 @@ package com.example.kortlinsampleform
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -12,12 +13,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import co.kyash.rkd.KeyboardDetector
+import co.kyash.rkd.KeyboardStatus
 import com.example.kortlinsampleform.Modal.NonCuratedItem
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
@@ -28,7 +33,6 @@ import java.util.ArrayList
 
 
 class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.ButtonActions {
-
 
     val TAG = "MainActivity"
 
@@ -54,6 +58,23 @@ class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.
 
         //Initialize noncurated item class
         nonCuratedItem = NonCuratedItem()
+
+
+
+        KeyboardDetector(this).observe().subscribe {
+            when (it) {
+                KeyboardStatus.OPENED -> {
+                    Log.d("MainActivity", "KeyboardStatus.OPENED")
+                }
+
+                KeyboardStatus.CLOSED -> {
+                    Log.d("MainActivity", "KeyboardStatus.CLOSED")
+                     hideSoftKeyborad()
+                }
+            }
+        }
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,7 +89,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.
             navigateToNext()
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -80,7 +100,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.
 
 
     private fun initializeUI(){
-        print("initializeUI")
         Log.d("MainActivity", "initializeUI")
 
         val test1View = findViewById<View>(R.id.item_name)
@@ -239,5 +258,9 @@ class MainActivity : AppCompatActivity(), OnClickListener, NewItemImageFragment.
             }
         }
 
+    }
+
+    private fun hideSoftKeyborad() {
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 }

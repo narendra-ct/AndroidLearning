@@ -16,8 +16,6 @@
             android:theme="@style/AppTheme">
         <activity android:name=".LocationSearchActivity.LocationSearchActivity">
         </activity>
-        <activity android:name=".LocationSearchActivity.LocationSearchResults">
-        </activity>
         <activity android:name=".OrderSummaryActivity">
         </activity>
         <activity android:name=".PickupLocationActivity">
